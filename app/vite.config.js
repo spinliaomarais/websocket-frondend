@@ -14,11 +14,11 @@ export default defineConfig({
       targets: [
         {
           src: path.resolve(__dirname, './src/assets/index.js'), // 1️⃣
-          dest: './', // 2️⃣
+          dest: './assets', // 2️⃣
         },
         {
           src: path.resolve(__dirname, './src/assets/main.css'), // 1️⃣
-          dest: './', // 2️⃣
+          dest: './assets', // 2️⃣
         },
       ],
     }),
