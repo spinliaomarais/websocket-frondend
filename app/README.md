@@ -26,7 +26,7 @@ npm run build
 
 ### run nginx server and add below setting
 ```sh
-location /spin-websocket {
+location /marais-event-push/ {
     proxy_pass http://localhost:8082;
     proxy_redirect off;
     proxy_http_version 1.1;

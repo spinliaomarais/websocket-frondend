@@ -1,5 +1,5 @@
 const stompClient = new StompJs.Client({
-    brokerURL: 'ws://localhost:8080/spin-websocket'
+    brokerURL: 'ws://localhost:8080/marais-event-push/spin-websocket'
 });
 
 stompClient.onConnect = (frame) => {
