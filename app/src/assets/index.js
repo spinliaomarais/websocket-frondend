@@ -13,6 +13,11 @@ stompClient.onConnect = (frame) => {
     stompClient.subscribe('/topic/greeting', (greeting) => {
         showGreeting(greeting.body);
     });
+
+
+    stompClient.subscribe('/topic/event-push/spin', (greeting) => {
+        showGreeting(greeting.body);
+    });
 };
 
 stompClient.onWebSocketError = (error) => {
