@@ -16,7 +16,7 @@ stompClient.onConnect = (frame) => {
     });
 
 
-    stompClient.subscribe('/topic/event-push/spin', (greeting) => {
+    stompClient.subscribe('/topic/event-push/marais', (greeting) => {
         showGreeting(greeting.body);
     });
 };
