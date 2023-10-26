@@ -17,6 +17,7 @@ if (!!window.EventSource) {
     const paragraph = document.createElement('p');
     paragraph.textContent = data.content.msg;
     events.appendChild(paragraph);
+    bc.postMessage(data);
   }, false);
 
   source.addEventListener('open', function(e) {
@@ -28,3 +29,12 @@ if (!!window.EventSource) {
       console.log("連線已關閉");
     }
   }, false);
+
+  const bc = new BroadcastChannel("test_channel");
+  bc.onmessage = (event) => {
+    console.log(event);
+    let events = document.getElementById("events");
+    const paragraph = document.createElement('p');
+    paragraph.textContent = event.data.content.msg;
+    events.appendChild(paragraph);
+  };
