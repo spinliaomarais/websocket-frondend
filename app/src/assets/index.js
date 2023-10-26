@@ -1,71 +1,30 @@
-const stompClient = new StompJs.Client({
-    brokerURL: 'ws://localhost:8080/marais-event-push/marais-websocket' // for dev
-    // brokerURL: 'ws://marais-stage.com/marais-event-push/marais-websocket' // for uat
-});
+if (!!window.EventSource) {
+    /**
+     * url pattern is http/https://{domain}:{port}/marais-event-push/sse/{id} 
+     * where {id} is dynamic value for specific user, please change it
+     */
+    // var source = new EventSource('http://localhost:8888/marais-event-push/sse/1'); // :8888 not use nginx
+    var source = new EventSource('http://localhost:8081/marais-event-push/sse/2'); // :8081 if use nginx local server
+    // var source = new EventSource('https://marais-stage.com/marais-event-push/sse/1'); // stage
+  } else {
+    console.log("瀏覽器不支援 SSE，使用傳統的 xhr polling :(");
+  }
 
-stompClient.onConnect = (frame) => {
-    setConnected(true);
-    console.log('Connected: ' + frame);
+  source.addEventListener('message', function(e) {
+    console.log(e.data);
+    let data = JSON.parse(e.data);
+    let events = document.getElementById("events");
+    const paragraph = document.createElement('p');
+    paragraph.textContent = data.content.msg;
+    events.appendChild(paragraph);
+  }, false);
 
-    stompClient.subscribe('/topic/greetings', (greeting) => {
-        showGreeting(JSON.parse(greeting.body).content);
-    });
-
-    stompClient.subscribe('/topic/greeting', (greeting) => {
-        showGreeting(greeting.body);
-    });
-
-
-    stompClient.subscribe('/topic/event-push/marais', (greeting) => {
-        showGreeting(greeting.body);
-    });
-};
-
-stompClient.onWebSocketError = (error) => {
-    console.error('Error with websocket', error);
-};
-
-stompClient.onStompError = (frame) => {
-    console.error('Broker reported error: ' + frame.headers['message']);
-    console.error('Additional details: ' + frame.body);
-};
-
-function setConnected(connected) {
-    $("#connect").prop("disabled", connected);
-    $("#disconnect").prop("disabled", !connected);
-    if (connected) {
-        $("#conversation").show();
+  source.addEventListener('open', function(e) {
+    console.log("連線已建立");
+  }, false);
+  
+  source.addEventListener('error', function(e) {
+    if (e.readyState == EventSource.CLOSED) {
+      console.log("連線已關閉");
     }
-    else {
-        $("#conversation").hide();
-    }
-    $("#greetings").html("");
-}
-
-function connect() {
-    stompClient.activate();
-}
-
-function disconnect() {
-    stompClient.deactivate();
-    setConnected(false);
-    console.log("Disconnected");
-}
-
-function sendName() {
-    stompClient.publish({   
-        destination: "/app/hello",
-        body: JSON.stringify({'name': $("#name").val()})
-    });
-}
-
-function showGreeting(message) {
-    $("#greetings").append("<tr><td>" + message + "</td></tr>");
-}
-
-$(function () {
-    $("form").on('submit', (e) => e.preventDefault());
-    $( "#connect" ).click(() => connect());
-    $( "#disconnect" ).click(() => disconnect());
-    $( "#send" ).click(() => sendName());
-});
+  }, false);

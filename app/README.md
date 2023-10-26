@@ -1,6 +1,6 @@
 # app
 
-websocket fronend example
+server-sent events fronend example
 
 ## Project Setup
 
@@ -24,16 +24,16 @@ npm run dev
 npm run build
 ```
 
-### run nginx server and add below setting
+### run nginx local server and add sse setting
 ```sh
-location /marais-event-push/ {
-    proxy_pass http://localhost:8082;
-    proxy_redirect off;
-    proxy_http_version 1.1;
-    proxy_set_header Upgrade $http_upgrade;
-    proxy_set_header Connection "upgrade";
-    proxy_set_header Host $host:$server_port;
-    proxy_set_header X-Real-IP $remote_addr;
-    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+location /marais-event-push {
+	proxy_pass http://localhost:8888;
+	proxy_redirect off;
+	proxy_http_version 1.1;
+	proxy_set_header Upgrade $http_upgrade;
+	proxy_set_header Connection "upgrade";
+	proxy_set_header Host $host:$server_port;
+	proxy_set_header X-Real-IP $remote_addr;
+	proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 }
 ```
